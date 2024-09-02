@@ -46,4 +46,10 @@ class Read:
             print(f"{i} out of {len(self.pages)}")
 
     def object_append(self, egy, trans, symbol):
-        self.dto.append({"Egyptian": egy, "Translation": trans, "Symbol": symbol})
+        self.dto.append(
+            {
+                "Egyptian": egy,
+                "Translation": self.ignore_new_lines(trans).split(", "),
+                "Symbol": self.ignore_new_lines(symbol).split(" "),
+            }
+        )

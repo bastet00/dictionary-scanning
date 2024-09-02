@@ -14,7 +14,7 @@ class Write:
 
 if __name__ == "__main__":
     start = datetime.now()
-    read = Read("output.pdf")
+    read = Read("DictionaryOfMiddleEgyptian-12-13.pdf")
     Write(read.dto).to_json()
     end = datetime.now()
     print(end - start)
