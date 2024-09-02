@@ -2,42 +2,44 @@ from pypdf import PdfReader
 
 
 class Read:
-
     def __init__(self, file):
-        self.page = PdfReader(file).pages[0].extract_text()
+        self.pages = PdfReader(file).pages
         self.dto = []
 
-        self.parse()
+        self.parse_all_pages()
 
     @staticmethod
-    def ignore_new_lines(str: str):
-        return str.rstrip("\n").replace("\n", "").strip()
+    def ignore_new_lines(s: str):
+        return s.rstrip("\n").replace("\n", "").strip()
 
-    def search(self, char, start):
-        return self.page.find(char, start)
-
-    def parse(self):
-        length = len(self.page)
+    def parse(self, page_content):
+        length = len(page_content)
         i = 0
         while i < length:
-            if self.page[i] == "[":
+            if page_content[i] == "[":
                 egy_start = i
-                egy_end = self.search("]", i)
-                trans_start = self.search("]", egy_end)
-                trans_end = self.search("{", trans_start)
+                egy_end = page_content.find("]", i)
+                trans_start = page_content.find("]", egy_end)
+                trans_end = page_content.find("{", trans_start)
 
                 if egy_end == -1 or trans_start == -1 or trans_end == -1:
                     break
 
                 self.object_append(
-                    self.page[egy_start + 1 : egy_end],
-                    self.page[trans_start + 1 : trans_end],
-                    self.page[trans_end + 1 : self.page.find("}", trans_end + 1)],
+                    page_content[egy_start + 1 : egy_end],
+                    page_content[trans_start + 1 : trans_end],
+                    page_content[trans_end + 1 : page_content.find("}", trans_end + 1)],
                 )
 
                 i = trans_end + 1
             else:
                 i += 1
+
+    def parse_all_pages(self):
+        for page in self.pages:
+            page_content = page.extract_text()
+            if page_content:
+                self.parse(page_content)
 
     def object_append(self, *args):
         self.dto.append(
@@ -47,3 +49,7 @@ class Read:
                 "Symbol": self.ignore_new_lines(args[2]).split(" "),
             }
         )
+
+
+read = Read("DictionaryOfMiddleEgyptian-12-13.pdf")
+print(read.dto)
