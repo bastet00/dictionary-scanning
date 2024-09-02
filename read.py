@@ -36,20 +36,14 @@ class Read:
                 i += 1
 
     def parse_all_pages(self):
+        i = 0
         for page in self.pages:
             page_content = page.extract_text()
             if page_content:
                 self.parse(page_content)
+                i += 1
 
-    def object_append(self, *args):
-        self.dto.append(
-            {
-                "Egyptian": args[0],
-                "Translation": self.ignore_new_lines(args[1]).split(", "),
-                "Symbol": self.ignore_new_lines(args[2]).split(" "),
-            }
-        )
+            print(f"{i} out of {len(self.pages)}")
 
-
-read = Read("DictionaryOfMiddleEgyptian-12-13.pdf")
-print(read.dto)
+    def object_append(self, egy, trans, symbol):
+        self.dto.append({"Egyptian": egy, "Translation": trans, "Symbol": symbol})
