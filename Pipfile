@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pypdf = "*"
 beautifulsoup4 = "*"
+deep-translator = "*"
 
 [dev-packages]
 ipykernel = "*"
